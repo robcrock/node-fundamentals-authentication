@@ -61,10 +61,11 @@ async function startApp() {
           request.body.password
         )
         if (isAuthorized) {
-          await logUserIn(userId, request, reply)
+          const { accessToken } = await logUserIn(userId, request, reply)
           reply.send({
             data: {
               status: "SUCCESS",
+              accessToken: accessToken,
               userId,
             },
           })

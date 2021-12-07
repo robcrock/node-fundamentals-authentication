@@ -52,16 +52,7 @@
     <button onclick="logout()">Logout</button>
 
     <script>
-      async function logout() {
-        try {
-          const res = await fetch("/api/logout", {
-            method: "POST",
-          })
-        } catch (e) {
-          console.error(e)
-        }
-      }
-
+      const viz = document.getElementById("tableauViz")
       ;(() => {
         const registerForm = document.getElementById("register-form")
         registerForm.addEventListener("submit", async (e) => {
@@ -80,8 +71,6 @@
             })
             const responseObj = await res.json()
             const responseBody = await responseObj
-            const viz = document.getElementById("tableauViz")
-            console.log("Token ", responseBody.data.accessToken)
             viz.token = responseBody.data.accessToken
           } catch (e) {
             console.error(e)
@@ -106,11 +95,25 @@
               body: JSON.stringify(values),
               headers: { "Content-type": "application/json; charset=UTF-8" },
             })
+            const responseObj = await res.json()
+            const responseBody = await responseObj
+            viz.token = responseBody.data.accessToken
           } catch (e) {
             console.error(e)
           }
         })
       })()
+
+      async function logout() {
+        try {
+          const res = await fetch("/api/logout", {
+            method: "POST",
+          })
+          viz.token = ""
+        } catch (e) {
+          console.error(e)
+        }
+      }
     </script>
   </body>
 </html>

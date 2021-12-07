@@ -8,7 +8,6 @@ const CONNECTED_APP_SECRET = process.env.CONNECTED_APP_SECRET_VALUE
 
 export async function createTokens(sessionToken, userId) {
   try {
-    console.log("Made it to line 10")
     // Create Refresh Token
     // Session Id
     const refreshToken = jwt.sign(
@@ -17,7 +16,6 @@ export async function createTokens(sessionToken, userId) {
       },
       CONNECTED_APP_SECRET
     )
-    console.log("Made it to line 19")
     // Create Access Token
     // Session Id, User Id
     const jwtOptions = {
@@ -45,8 +43,6 @@ export async function createTokens(sessionToken, userId) {
       CONNECTED_APP_SECRET,
       jwtOptions
     )
-
-    console.log("ACCESS TOKEN ", accessToken)
 
     // Return Refresh Token & Access Token
     return { accessToken, refreshToken }
