@@ -11,5 +11,10 @@ export async function logUserIn(userId, request, reply) {
 
   // Create JWT
   // Set Cookie
-  await refreshTokens(sessionToken, userId, reply)
+  const { accessToken, refreshToken } = await refreshTokens(
+    sessionToken,
+    userId,
+    reply
+  )
+  return { accessToken, refreshToken }
 }

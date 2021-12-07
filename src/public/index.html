@@ -5,6 +5,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <script
+      type="text/javascript"
+      src="https://10ax.online.tableau.com/javascripts/api/tableau.embedding.3.latest.js"
+    ></script>
   </head>
   <body>
     <h1>Hello</h1>
@@ -26,6 +30,20 @@
       <input type="password" name="password" />
       <button type="submit">Login</button>
     </form>
+
+    <br />
+    <hr />
+    <br />
+
+    <tableau-viz
+      id="tableauViz"
+      src="https://10ax.online.tableau.com/t/developmentonlydev595736/views/EnergyMap/energymap"
+      toolbar="Bottom"
+      hide-tabs
+      width="800px"
+      height="600px"
+      token="{accessToken}"
+    ></tableau-viz>
 
     <br />
     <hr />
@@ -60,6 +78,11 @@
               body: JSON.stringify(values),
               headers: { "Content-type": "application/json; charset=UTF-8" },
             })
+            const responseObj = await res.json()
+            const responseBody = await responseObj
+            const viz = document.getElementById("tableauViz")
+            console.log("Token ", responseBody.data.accessToken)
+            viz.token = responseBody.data.accessToken
           } catch (e) {
             console.error(e)
           }

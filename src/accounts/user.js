@@ -67,6 +67,7 @@ export async function refreshTokens(sessionToken, userId, reply) {
         domain: "localhost",
         httpOnly: true,
       })
+    return { accessToken, refreshToken }
   } catch (e) {
     console.error(e)
   }
