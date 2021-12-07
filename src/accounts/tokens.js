@@ -1,26 +1,53 @@
 import jwt from "jsonwebtoken"
+import { randomBytes } from "crypto"
 
 const JWTSignature = process.env.JWT_SIGNATURE
+const CLIENT_ID = process.env.CONNECTED_APP_SECRET_ID
+const ISSUER = process.env.CONNECTED_APP_ID
+const CONNECTED_APP_SECRET = process.env.CONNECTED_APP_SECRET_VALUE
 
 export async function createTokens(sessionToken, userId) {
   try {
+    console.log("Made it to line 10")
     // Create Refresh Token
     // Session Id
     const refreshToken = jwt.sign(
       {
         sessionToken,
       },
-      JWTSignature
+      CONNECTED_APP_SECRET
     )
+    console.log("Made it to line 19")
     // Create Access Token
     // Session Id, User Id
+    const jwtOptions = {
+      expiresIn: "10m",
+      header: {
+        kid: CLIENT_ID,
+        iss: ISSUER,
+      },
+    }
+
+    const tableauPayload = {
+      jti: randomBytes(64).toString("hex"),
+      iss: ISSUER,
+      aud: "tableau",
+      sub: "robert@vizsimply.com",
+      scope: ["tableau:views:embed"],
+    }
+
     const accessToken = jwt.sign(
       {
         sessionToken,
         userId,
+        ...tableauPayload,
       },
-      JWTSignature
+      CONNECTED_APP_SECRET,
+      jwtOptions
     )
+
+    console.log("ACCESS TOKEN ", accessToken)
+
     // Return Refresh Token & Access Token
     return { accessToken, refreshToken }
   } catch (e) {
