@@ -50,3 +50,15 @@ export async function createTokens(sessionToken, userId) {
     console.error(e)
   }
 }
+
+export async function getAccessToken(request, reply) {
+  try {
+    // Check to make sure access token exists
+    if (request?.cookies?.accessToken) {
+      const { accessToken } = request.cookies
+      return accessToken
+    }
+  } catch (e) {
+    console.error(e)
+  }
+}

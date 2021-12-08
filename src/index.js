@@ -9,7 +9,7 @@ import { registerUser } from "./accounts/register.js"
 import { authorizeUser } from "./accounts/authorize.js"
 import { logUserIn } from "./accounts/logUserIn.js"
 import { logUserOut } from "./accounts/logUserOut.js"
-import { getUserFromCookies } from "./accounts/user.js"
+import { getAccessToken } from "./accounts/tokens.js"
 
 // ESM specific features
 const __filename = fileURLToPath(import.meta.url)
@@ -103,15 +103,15 @@ async function startApp() {
     app.get("/test", {}, async (request, reply) => {
       try {
         // Verify user login
-        const user = await getUserFromCookies(request, reply)
+        const accessToken = await getAccessToken(request, reply)
         // Return user email, if it exists, otherwise return unauthorized
-        if (user?._id) {
+        if (accessToken) {
           reply.send({
-            data: user,
+            data: accessToken,
           })
         } else {
           reply.send({
-            data: "User Lookup Failed",
+            data: "No Access Token",
           })
         }
       } catch (e) {

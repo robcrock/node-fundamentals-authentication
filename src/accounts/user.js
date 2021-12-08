@@ -5,6 +5,7 @@ import { createTokens } from "./tokens.js"
 const { ObjectId } = mongo
 
 const JWTSignature = process.env.JWT_SIGNATURE
+const CONNECTED_APP_SECRET = process.env.CONNECTED_APP_SECRET_VALUE
 
 export async function getUserFromCookies(request, reply) {
   try {
@@ -15,7 +16,7 @@ export async function getUserFromCookies(request, reply) {
       // If access token
       const { accessToken } = request.cookies
       // Decode decode access token
-      const decodedAccessToken = jwt.verify(accessToken, JWTSignature)
+      const decodedAccessToken = jwt.verify(accessToken, CONNECTED_APP_SECRET)
       // Return user from record
       return user.findOne({
         _id: ObjectId(decodedAccessToken?.userId),
@@ -24,7 +25,7 @@ export async function getUserFromCookies(request, reply) {
     if (request?.cookies?.refreshToken) {
       const { refreshToken } = request.cookies
       // Decode refresh token
-      const { sessionToken } = jwt.verify(refreshToken, JWTSignature)
+      const { sessionToken } = jwt.verify(refreshToken, CONNECTED_APP_SECRET)
       // Look up session
       const currentSession = await session.findOne({ sessionToken })
       // Confirm session is valid

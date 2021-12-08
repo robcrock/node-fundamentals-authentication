@@ -42,7 +42,7 @@
       hide-tabs
       width="800px"
       height="600px"
-      token="{accessToken}"
+      token=""
     ></tableau-viz>
 
     <br />
@@ -53,7 +53,31 @@
 
     <script>
       const viz = document.getElementById("tableauViz")
+
       ;(() => {
+        const attemptToAuthorize = async () => {
+          try {
+            const res = await fetch("/test", {
+              method: "GET",
+              headers: { "Content-type": "application/json; charset=UTF-8" },
+            })
+            const responseObj = await res.json()
+            const responseBody = await responseObj
+            return responseBody.data
+          } catch (e) {
+            console.error(e)
+          }
+        }
+
+        attemptToAuthorize().then((data) => {
+          if (data !== "No Access Token") {
+            viz.token = data
+          } else {
+            viz.token = "no-token-found"
+          }
+        })
+
+        // Register a new user
         const registerForm = document.getElementById("register-form")
         registerForm.addEventListener("submit", async (e) => {
           e.preventDefault()
@@ -76,9 +100,9 @@
             console.error(e)
           }
         })
-        // Find form element
+
+        // Log exiting users in
         const loginForm = document.getElementById("login-form")
-        // Wait for event
         loginForm.addEventListener("submit", async (e) => {
           e.preventDefault()
           try {
@@ -104,12 +128,13 @@
         })
       })()
 
+      // Log users out of their session
       async function logout() {
         try {
           const res = await fetch("/api/logout", {
             method: "POST",
           })
-          viz.token = ""
+          window.location.reload()
         } catch (e) {
           console.error(e)
         }
