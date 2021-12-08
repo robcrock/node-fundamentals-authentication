@@ -1,23 +1,13 @@
 import jwt from "jsonwebtoken"
 import { randomBytes } from "crypto"
 
-const JWTSignature = process.env.JWT_SIGNATURE
 const CLIENT_ID = process.env.CONNECTED_APP_SECRET_ID
 const ISSUER = process.env.CONNECTED_APP_ID
 const CONNECTED_APP_SECRET = process.env.CONNECTED_APP_SECRET_VALUE
 
-export async function createTokens(sessionToken, userId) {
+export async function createTokens(userId) {
   try {
-    // Create Refresh Token
-    // Session Id
-    const refreshToken = jwt.sign(
-      {
-        sessionToken,
-      },
-      CONNECTED_APP_SECRET
-    )
     // Create Access Token
-    // Session Id, User Id
     const jwtOptions = {
       expiresIn: "10m",
       header: {
@@ -36,7 +26,6 @@ export async function createTokens(sessionToken, userId) {
 
     const accessToken = jwt.sign(
       {
-        sessionToken,
         userId,
         ...tableauPayload,
       },
@@ -44,8 +33,7 @@ export async function createTokens(sessionToken, userId) {
       jwtOptions
     )
 
-    // Return Refresh Token & Access Token
-    return { accessToken, refreshToken }
+    return { accessToken }
   } catch (e) {
     console.error(e)
   }

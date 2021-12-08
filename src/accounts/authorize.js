@@ -6,7 +6,7 @@ export async function authorizeUser(email, password) {
   const { user } = await import("../user/user.js")
   // Look up user
   const userData = await user.findOne({
-    "email.address": email,
+    email: email,
   })
   // Get user Password
   const savedPassword = userData.password

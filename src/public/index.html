@@ -57,7 +57,7 @@
       ;(() => {
         const attemptToAuthorize = async () => {
           try {
-            const res = await fetch("/test", {
+            const res = await fetch("/authorizeAccessToken", {
               method: "GET",
               headers: { "Content-type": "application/json; charset=UTF-8" },
             })
@@ -93,6 +93,7 @@
               body: JSON.stringify(values),
               headers: { "Content-type": "application/json; charset=UTF-8" },
             })
+            // Set the token property of our viz
             const responseObj = await res.json()
             const responseBody = await responseObj
             viz.token = responseBody.data.accessToken
@@ -119,6 +120,7 @@
               body: JSON.stringify(values),
               headers: { "Content-type": "application/json; charset=UTF-8" },
             })
+            // Set the token property on the Tableau viz
             const responseObj = await res.json()
             const responseBody = await responseObj
             viz.token = responseBody.data.accessToken

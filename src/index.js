@@ -29,20 +29,20 @@ async function startApp() {
 
     app.post("/api/register", {}, async (request, reply) => {
       try {
+        // Return userId stored in our database
         const userId = await registerUser(
           request.body.email,
           request.body.password
         )
-        if (userId) {
-          const { accessToken } = await logUserIn(userId, request, reply)
-          reply.send({
-            data: {
-              status: "SUCCESS",
-              accessToken: accessToken,
-              userId,
-            },
-          })
-        }
+        // Log the newly registered user in
+        const { accessToken } = await logUserIn(userId, request, reply)
+        reply.send({
+          data: {
+            status: "SUCCESS",
+            userId,
+            accessToken: accessToken,
+          },
+        })
       } catch (e) {
         console.error(e)
         reply.send({
@@ -65,8 +65,8 @@ async function startApp() {
           reply.send({
             data: {
               status: "SUCCESS",
-              accessToken: accessToken,
               userId,
+              accessToken: accessToken,
             },
           })
         }
@@ -100,7 +100,7 @@ async function startApp() {
       }
     })
 
-    app.get("/test", {}, async (request, reply) => {
+    app.get("/authorizeAccessToken", {}, async (request, reply) => {
       try {
         // Verify user login
         const accessToken = await getAccessToken(request, reply)
